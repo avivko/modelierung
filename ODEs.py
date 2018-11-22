@@ -29,7 +29,7 @@ Kifr = 0.5
 Ka = 0.7
 Ki = 0.7
 Kd = 3
-Fp = 4 # Fgf4 concentration ?
+#Fp = 4  Fgf4 concentration ? 
 
 r = 3
 s = 4
@@ -40,10 +40,10 @@ w = 4
 z = 4
 
 # simulation time
-start = 0  # min
-end = 100  # min
-plotPoints = 1000
-timeGrid = np.linspace(start, end, plotPoints)
+#start = 0  # min
+#end = 100  # min
+#plotPoints = 1000
+#timeGrid = np.linspace(start, end, plotPoints)
 
 
 # returns the ODE as the operator d/dt()
@@ -53,7 +53,7 @@ def dif(x, t):
     dG = (vsg1 * ((ERK**r) / ((Kag1**r) + (ERK**r))) + vsg2 * ((G**s) / ((Kag2**s) + (G**s)))) * ((Kig**q) / ((Kig**q) + (N**q))) - kdg * G
     dN = (vsn1 * ((Kin1**u) / ((Kin1**u) + (ERK**u))) + vsn2 * ((N**v) / ((Kan**v) + (N**v)))) * ((Kin2**w) / ((Kin2**w) + (G**w))) - kdn * N
     dFR = vsfr1 * ((Kifr) / (Kifr + N)) + vsfr2 * ((G) / (Kafr + G)) - kdfr * FR
-    dERK = va * FR * ((Fp) / (Kd + Fp)) * ((1 - ERK) / (Ka + 1 - ERK)) - vin * ((ERK) / (Ki + ERK))
+    dERK = va * FR * ((Fp) / (Kd + Fp)) * ((1 - ERK) / (Ka + 1 - ERK)) - vin * ((ERK) / (Ki + ERK)) # is "vin" the typo friedemann was talking about? becaus i can't find it in the parameters.
 
     #return [dG, dN, dFR, dERK]
 
