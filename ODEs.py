@@ -29,6 +29,8 @@ Kifr = 0.5
 Ka = 0.7
 Ki = 0.7
 Kd = 3
+Fp = 4 # Fgf4 concentration ?
+
 r = 3
 s = 4
 q = 4
@@ -47,11 +49,11 @@ timeGrid = np.linspace(start, end, plotPoints)
 # returns the ODE as the operator d/dt()
 def dif(x, t):
     G, N, FR, ERK = x
-    dG = 0
-    dN = 0
-    dFR = 0
-    dERK = 0
-    return [dG, dN, dFR, dERK]
+    dG = (vsg1 * ((ERK ** r) / ((Kag1 ** r) + (ERK ** r))) + vsg2 * ((G ** s) / ((Kag2 ** s) + (G ** s)))) * ((Kig ** q) / ((Kig ** q)+(N ** q))) - kdg *G
+    dN = (vsn1*((Kin1 ** u)/((Kin1 ** u)+(ERK ** u))) + vsn2 * ((N ** v)/((Kan ** v) + (N ** v)))) * ((Kin2 ** w)/((Kin2 ** w)+(G ** w))) - kdn * N
+    dFR = vsfr1 * ((Kifr)/(Kifr + N)) + vsfr2 * ((G)/(Kafr + G)) - kdfr * FR
+#    dERK = va * FR * ((Fp)/())
+#   return [dG, dN, dFR, dERK]
 
 
 #v0 = [G0,N0,FR0,ERK0]
