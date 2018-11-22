@@ -48,13 +48,19 @@ timeGrid = np.linspace(start, end, plotPoints)
 
 # returns the ODE as the operator d/dt()
 def dif(x, t):
-    G, N, FR, ERK = x
-    dG = (vsg1 * ((ERK ** r) / ((Kag1 ** r) + (ERK ** r))) + vsg2 * ((G ** s) / ((Kag2 ** s) + (G ** s)))) * ((Kig ** q) / ((Kig ** q)+(N ** q))) - kdg *G
-    dN = (vsn1*((Kin1 ** u)/((Kin1 ** u)+(ERK ** u))) + vsn2 * ((N ** v)/((Kan ** v) + (N ** v)))) * ((Kin2 ** w)/((Kin2 ** w)+(G ** w))) - kdn * N
-    dFR = vsfr1 * ((Kifr)/(Kifr + N)) + vsfr2 * ((G)/(Kafr + G)) - kdfr * FR
-#    dERK = va * FR * ((Fp)/())
-#   return [dG, dN, dFR, dERK]
+    #G, N, FR, ERK = x
+
+    dG = (vsg1 * ((ERK**r) / ((Kag1**r) + (ERK**r))) + vsg2 * ((G**s) / ((Kag2**s) + (G**s)))) * ((Kig**q) / ((Kig**q) + (N**q))) - kdg * G
+    dN = (vsn1 * ((Kin1**u) / ((Kin1**u) + (ERK**u))) + vsn2 * ((N**v) / ((Kan**v) + (N**v)))) * ((Kin2**w) / ((Kin2**w) + (G**w))) - kdn * N
+    dFR = vsfr1 * ((Kifr) / (Kifr + N)) + vsfr2 * ((G) / (Kafr + G)) - kdfr * FR
+    dERK = va * FR * ((Fp) / (Kd + Fp)) * ((1 - ERK) / (Ka + 1 - ERK)) - vin * ((ERK) / (Ki + ERK))
+
+    #return [dG, dN, dFR, dERK]
+
+
+
 
 
 #v0 = [G0,N0,FR0,ERK0]
 #result = solve_ivp(f, y0, timeGrid)
+
