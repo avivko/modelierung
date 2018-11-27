@@ -32,6 +32,8 @@ Kd = 2
 FpTristablility = 0.06
 Fp0 = 0.03  # as seen in fig. 2
 FPend = 0.11  # as seen in fig. 2
+FR0 = 2.8
+ERK0 = 0.25
 
 
 r = 3
@@ -46,7 +48,7 @@ z = 4
 # simulation time
 start = 0  # min
 end = 50  # max
-plotPoints = 50
+plotPoints = 500
 timeGrid = np.linspace(start, end, plotPoints)
 
 
@@ -91,9 +93,9 @@ def Fp(t):
 def varying_v0_solver(step_size):
     results_list = []
     step = step_size
-    while step <= 2.2:
-        results_list.append(solve_ivp(dif_Fp_const, (start, end), [step, 0.2, 0, 0], t_eval=timeGrid))  # order for v0: [G0,N0,FR0,ERK0]
-        results_list.append(solve_ivp(dif_Fp_const, (start, end), [0.2, step, 0, 0], t_eval=timeGrid))  # order for v0: [G0,N0,FR0,ERK0]
+    while step <= 1.6:
+        results_list.append(solve_ivp(dif_Fp_const, (start, end), [step, 0.2, FR0, ERK0], t_eval=timeGrid))  # order for v0: [G0,N0,FR0,ERK0]
+        results_list.append(solve_ivp(dif_Fp_const, (start, end), [0.2, step, FR0, ERK0], t_eval=timeGrid))  # order for v0: [G0,N0,FR0,ERK0]
         step += step_size
     return results_list
 
@@ -108,7 +110,7 @@ def solver_for_Fp():
 Fp_curve = Fp(timeGrid)
 
 resultsPhaseSpace = varying_v0_solver(0.2)
-resultBifurcation = solve_ivp(dif_Fp_param, (start, end), [0, 0, 0, 0], t_eval=timeGrid)  # order for v0: [G0,N0,FR0,ERK0,Fp])
+resultBifurcation = solve_ivp(dif_Fp_param, (start, end), [0, 0, FR0, ERK0], t_eval=timeGrid)  # order for v0: [G0,N0,FR0,ERK0,Fp])
 
 G_data_bif = resultBifurcation.y[0]
 N_data_bif = resultBifurcation.y[1]
@@ -130,12 +132,15 @@ plot2.set_xlabel('Fgf4', fontsize=15)
 plot2.set_ylabel('Nanog', fontsize=15)
 # Nanog(Gata6) plot - phase space diagram
 plot3 = plt.subplot(2, 2, 3)
+plot3.set_xlabel('Gata6', fontsize=15)
+plot3.set_ylabel('Nanog', fontsize=15)
+plot3.set_ylim(bottom=0, top=2.2)
+plot3.set_xlim(left=0, right=2.2)
 for result in resultsPhaseSpace:
     G_data_ps = result.y[0]
     N_data_ps = result.y[1]
     plot3.plot(G_data_ps, N_data_ps, label='lower left')
-    plot3.set_xlabel('Gata6', fontsize=15)
-    plot3.set_ylabel('Nanog', fontsize=15)
+
 # Fgf4(t) plot from the bifurcation plots
 plot4 = plt.subplot(2, 2, 4)
 plt.plot(t_data_bif, Fp_data_bif, label='lower right')
