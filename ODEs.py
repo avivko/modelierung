@@ -28,7 +28,7 @@ Kin2 = 2
 Kifr = 0.5
 Ka = 0.7
 Ki = 0.7
-Kd = 3
+Kd = 2
 FpTristablility = 0.06
 Fp0 = 0.03  # as seen in fig. 2
 FPend = 0.11  # as seen in fig. 2
@@ -45,7 +45,7 @@ z = 4
 
 # simulation time
 start = 0  # min
-end = 10  # max
+end = 50 # max
 plotPoints = 10
 # timeGrid = np.linspace(start, end, plotPoints) #right now  not used
 
