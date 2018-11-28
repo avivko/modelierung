@@ -128,7 +128,8 @@ def varying_v0_solver(step_size,use_varying_Fp=0):
             step += step_size
     return results_list
 
-def solver_for_Fp():
+
+def solver_for_Fp():  # not used, is for bifurcation
     value_list = []
     for t_value in timeGrid:
         value_list.append(Fp(t_value))
@@ -180,13 +181,12 @@ def four_plots():  # right now not used/isn't useful
 
 #make a phase space plot (plots and also saved picture)
 def phase_space_only():
-    resultsPhaseSpace = varying_v0_solver(0.2, 0)
     ax = plt.axes()
     ax.set_xlabel('Gata6', fontsize=15)
     ax.set_ylabel('Nanog', fontsize=15)
     ax.set_ylim(bottom=0, top=2.2)
     ax.set_xlim(left=0, right=2.2)
-    for result in resultsPhaseSpace:
+    for result in varying_v0_solver(0.2, 0):
         G_data_ps = result.y[0]
         N_data_ps = result.y[1]
         plt.plot(G_data_ps, N_data_ps, label='lower left')
@@ -200,7 +200,7 @@ def phase_space_only():
 #make a dynamic phase space plot with varying Fp (movie gets saved)
 def phase_plot_animation():
     fig, ax = plt.subplots()
-    line, = ax.plot([], [], lw=2)
+    line, = ax.plot([], [], '.')
     Fp_value_text = ax.text(0.02, 0.95, '', transform=ax.transAxes)
     xdata, ydata = [],[]
 
@@ -221,13 +221,13 @@ def phase_plot_animation():
         for result in varying_v0_solver(0.2, 1):
             xdata.append(result.y[0])
             ydata.append(result.y[1])
-            line.set_data(xdata, ydata)
+        line.set_data(xdata, ydata)
         Fp_value_text.set_text('Fp={0:.2f}'.format(Fp))
         print('current Fp value is', Fp)
         return line,
 
     animation = FuncAnimation(fig, update, frames=np.linspace(0, 0.11, 128), init_func=init, blit=True)
-    animation.save('animation_{}.mp4'.format(timeAndDate), fps=10, extra_args=['-vcodec', 'libx264'])
+    animation.save('animation_{}.mp4'.format(timeAndDate), fps=5, extra_args=['-vcodec', 'libx264'])
     print('movie saved')
 
 
