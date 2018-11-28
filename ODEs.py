@@ -126,10 +126,11 @@ def two_cell_plot():
     ax.set_xlim(left = 0, right = 50)
     xdata = resulttwocell.t
     ydata = resulttwocell.y[0]
-    plt.plot(xdata, ydata)
+    plt.plot(xdata, ydata, label='Gata cell #1')
     xdata = resulttwocell.t
     ydata = resulttwocell.y[2]
-    plt.plot(xdata, ydata)
+    plt.plot(xdata, ydata, label='Nanog cell #1')
+    plt.legend(loc=5)
     plt.show()
 
     #plot B
@@ -140,10 +141,11 @@ def two_cell_plot():
     ax.set_xlim(left = 0, right = 50)
     xdata = resulttwocell.t
     ydata = resulttwocell.y[1]
-    plt.plot(xdata, ydata)
+    plt.plot(xdata, ydata, label='Gata cell #2')
     xdata = resulttwocell.t
     ydata = resulttwocell.y[3]
-    plt.plot(xdata, ydata)
+    plt.plot(xdata, ydata, label='Nanog cell #2')
+    plt.legend(loc=5)
     plt.show()
 
 
@@ -156,10 +158,11 @@ def two_cell_plot():
     ax.set_xlim(left = 0, right = 50)
     xdata = resulttwocell.t
     ydata = resulttwocell.y[10]
-    plt.plot(xdata, ydata)
+    plt.plot(xdata, ydata, label='Fgf4 cell #1')
     xdata = resulttwocell.t
     ydata = resulttwocell.y[11]
-    plt.plot(xdata, ydata)
+    plt.plot(xdata, ydata, label='Fgf4 cell #2')
+    plt.legend(loc=5)
     plt.show()
 
 
