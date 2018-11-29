@@ -78,9 +78,7 @@ def two_cell_plot():
         ERK2 = x[7]
         Fs1 = x[8]
         Fs2 = x[9]
-        Fp1 = x[10]
-        Fp2 = x[11]
-        F = x[12]
+
 
         dG1 = (vsg1 * ((ERK1 ** r) / ((Kag1 ** r) + (ERK1 ** r))) + vsg2 * ((G1 ** s) / ((Kag2 ** s) + (G1 ** s)))) * (
             (Kig ** q) / ((Kig ** q) + (N1 ** q))) - kdg * G1
@@ -92,34 +90,36 @@ def two_cell_plot():
             (Kin2 ** w) / ((Kin2 ** w) + (G2 ** w))) - kdn * N2
         dFR1 = vsfr1 * ((Kifr) / (Kifr + N1)) + vsfr2 * ((G1) / (Kafr + G1)) - kdfr * FR1
         dFR2 = vsfr1 * ((Kifr) / (Kifr + N2)) + vsfr2 * ((G2) / (Kafr + G2)) - kdfr * FR2
-        dERK1 = va * FR1 * ((Fp1) / (Kd + Fp1)) * ((1 - ERK1) / (Ka + 1 - ERK1)) - vi * (
+        dERK1 = va * FR1 * (((1 - gam) * (Fs1+Fs2)/2) / (Kd + (1 - gam) * (Fs1+Fs2)/2)) * ((1 - ERK1) / (Ka + 1 - ERK1)) - vi * (
             (ERK1) / (Ki + ERK1))  # vin->vi ; typo?
-        dERK2 = va * FR2 * ((Fp2) / (Kd + Fp2)) * ((1 - ERK2) / (Ka + 1 - ERK2)) - vi * (
+        dERK2 = va * FR2 * (((1 + gam) * (Fs1+Fs2)/2) / (Kd + (1 + gam) * (Fs1+Fs2)/2)) * ((1 - ERK2) / (Ka + 1 - ERK2)) - vi * (
             (ERK2) / (Ki + ERK2))
         dFs1 = vsf * (N1 ** z) / ((Kaf ** z) + (N1 ** z)) - kdf * Fs1 + vex
         dFs2 = vsf * (N2 ** z) / ((Kaf ** z) + (N2 ** z)) - kdf * Fs2 + vex
-        dFp1 = (1 - gam) * F
-        dFp2 = (1 + gam) * F
-        dF = (dFp1 + dFp2)/(2)
 
 
 
 
-        return [dG1, dG2, dN1, dN2, dFR1, dFR2, dERK1, dERK2, dFs1, dFs2, dFp1, dFp2, dF ]
+
+        return [dG1, dG2, dN1, dN2, dFR1, dFR2, dERK1, dERK2, dFs1, dFs2 ]
 
 
 
     #solving
 
-    resulttwocell = solve_ivp(dif_twocell,(start, end), [G10, G20, N10, N20, FR10, FR20, ERK10, ERK20, 0, 0, 0, 0, F0], t_eval=timeGrid)
+    resulttwocell = solve_ivp(dif_twocell,(start, end), [G10, G20, N10, N20, FR10, FR20, ERK10, ERK20, 0.066, 0.066], t_eval=timeGrid)
 
 
+    F = np.array([x + y for x, y in zip(np.array(resulttwocell.y[8]), np.array(resulttwocell.y[9]))])/2
+    Fp1 = (1 - gam)*F
+    Fp2 = (1 + gam)*F
 
+    #G6 = np.array([x + y for x, y in zip(np.array(resulttwocell.y[0]), np.array(resulttwocell.y[1]))])
+    #NG = np.array([x + y for x, y in zip(np.array(resulttwocell.y[2]), np.array(resulttwocell.y[3]))])
 
     #plotting
     #plot A
     ax = plt.axes()
-
     ax.set_xlabel('Time', fontsize = 15)
     ax.set_ylabel('Gata6, Nanog', fontsize = 15)
     ax.set_ylim(bottom = 0, top = 2.2)
@@ -148,21 +148,40 @@ def two_cell_plot():
     plt.legend(loc=5)
     plt.show()
 
+    #plot c
+    ax = plt.axes()
+    ax.set_xlabel('Gata 6', fontsize = 15)
+    ax.set_ylabel('Nanog', fontsize = 15)
+    ax.set_ylim(bottom = 0, top = 2.2)
+    ax.set_xlim(left= 0 , right= 2.2)
+    xdata = resulttwocell.y[0]
+    ydata = resulttwocell.y[2]
+    plt.plot(xdata, ydata)
+    xdata = resulttwocell.y[1]
+    ydata = resulttwocell.y[3]
+    plt.plot(xdata, ydata)
+
+    plt.show()
+
+
 
 
     #plot d
     ax = plt.axes()
     ax.set_xlabel('FGF4', fontsize = 15)
     ax.set_ylabel('Time', fontsize = 15)
-    ax.set_ylim(bottom = 0, top = 0.075)
+    ax.set_ylim(bottom = 0.045, top = 0.075)
     ax.set_xlim(left = 0, right = 50)
     xdata = resulttwocell.t
-    ydata = resulttwocell.y[10]
+    ydata = Fp1
     plt.plot(xdata, ydata, label='Fgf4 cell #1')
     xdata = resulttwocell.t
-    ydata = resulttwocell.y[11]
+    ydata = Fp2
     plt.plot(xdata, ydata, label='Fgf4 cell #2')
-    plt.legend(loc=5)
+    xdata = resulttwocell.t
+    ydata = F
+    plt.plot(xdata, ydata, '--', label = 'Average extracellular Fgf4' )
+    plt.legend(loc=4)
     plt.show()
 
 
